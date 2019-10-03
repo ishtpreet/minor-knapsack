@@ -39,7 +39,7 @@ int max(int a, int b)
 
 void main()
 {
-    int numberOfAds, i, j;
+    int numberOfAds, i, j, profitKnapsack=0, profit=0;
     printf("\nEnter number of Ads to be displayed");
     scanf("%d",&numberOfAds);
     int AdLength[numberOfAds+1];
@@ -87,9 +87,10 @@ void main()
     printf("%d\n",Knapsack[numberOfAds][totalTimeSlot]);
     i = numberOfAds;
     j = totalTimeSlot;
-    while(i>0 || j>0)
+    while(i>0 && j>=0)
     {
-        if(Knapsack[i][j] == Knapsack[i-1][j])
+        
+            if(Knapsack[i][j] == Knapsack[i-1][j])
         {
             printf("\nAd %d will not be displayed",i);
             i--;
@@ -99,8 +100,30 @@ void main()
         {
             printf("\nAd %d will be displayed",i);
             j = j - AdLength[i];
+            profitKnapsack += AdProfit[i];
             i--;
-            //printf("/n Time Left: %d ",j);
-        }        
+            //printf("/n Time Left: %d ",j);  
+
+        }
     }
+    printf("\nProfit using Knapsack Technique is %d ",profitKnapsack);
+
+    // *********** Using normal Technique ***********
+    printf("\n\n***************************\n");
+    i =totalTimeSlot;
+        for(j=1;j<=numberOfAds;j++)
+        {
+            if(i>=AdLength[j])
+            {
+                printf("\nAd %d will be displayed ",j);
+                i -= AdLength[j];
+                profit += AdProfit[j];
+            }
+            else
+            {
+                printf("\nAd %d will not be displayed ",j);
+            }
+            
+        }
+        printf("\nProfit using FCFS Technique is %d \n",profit);
 }

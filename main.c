@@ -1,27 +1,100 @@
 #include<stdio.h>
 #include<time.h>	
 #include <unistd.h>
-// Total time slot assigned for Advertisement (in seconds)
-int totalTimeSlot = 8;
+void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[]);
 
-
-//to display the advertisement running
-void playad(int duration)
+//Zone
+struct zone
 {
-    clock_t begin, end;
-    double time_spent;
-
-    begin = clock();
-    time_spent = (double)begin / CLOCKS_PER_SEC;
-
-    for(time_spent=0.0; time_spent < duration; time_spent = time_spent + .5)
-    {
-        printf("#");
-        sleep(1);
-    }
+    int numberOfAds;
+    int totalTimeAvailable;
+    int advertNumber[29];
+    int numberOfSpotsRequested[29];
+    int numberOfSpotsUsed[29];
+    int durationPerSpot[29];
+    int advertChargesPerSpot[29];
+    int totalDuration[29];
+    int amount[29];
     
-    end = clock();
+}A1;
+
+//Zone A1
+void zoneA1()
+{
+    A1.numberOfAds = 28;
+    A1.totalTimeAvailable = 1200;
+    int i;
+    /******************* Putting values in the corresponding arrays *****************/
+
+    //advertnumber/(S.No.)
+    for(i=1;i<=28;i++)
+    {
+        A1.advertNumber[i] = i;
+    }      
+
+    //numberOfSpotsRequested
+    //A1.numberOfSpotsRequested= {4,1,3,3,3,4,3,2,3,4,2,3,2,5,2,3,1,1,2,2,3,1,4,2,4,2,3,6};
+    FILE* ptr1 = fopen("numberOfSpotsRequested.txt","r");
+    for(i=1;i<=28;i++)
+    {
+        fscanf(ptr1,"%d",&A1.numberOfSpotsRequested[i]); 
+    }
+    fclose(ptr1);
+
+    //durationPerSpot
+    FILE* ptr2 = fopen("durationPerSpot.txt","r");
+    for(i=1;i<=28;i++)
+    {
+        fscanf(ptr2,"%d",&A1.durationPerSpot[i]); 
+    }
+    fclose(ptr2);
+    
+    //advertChargesPerSpot
+    for(i=1;i<=28;i++)
+    {
+        switch (A1.durationPerSpot[i])
+        {
+        case 15:
+            A1.advertChargesPerSpot[i] = 4905;
+            break;
+        case 20:
+            A1.advertChargesPerSpot[i] = 6375;
+            break;
+        case 30:
+            A1.advertChargesPerSpot[i] = 9485;
+            break;
+        case 45:
+            A1.advertChargesPerSpot[i] = 14150;
+            break;
+        case 60:
+            A1.advertChargesPerSpot[i] = 19645;
+            break;
+        }
+    }
+
+    //totalDuration
+    A1.totalDuration[0]=0;              //for implementing 01 Knapsack
+    for(i=1;i<=28;i++)
+    {
+        A1.totalDuration[i] = A1.durationPerSpot[i]*A1.numberOfSpotsRequested[i];
+    }
+
+    //amount                            
+    A1.amount[0]=0;                     //for implementing 01 Knapsack
+    for(i=1;i<=28;i++)
+    {
+        A1.amount[i] = A1.durationPerSpot[i]*A1.advertChargesPerSpot[i];
+    }
+
+    //Printing the zone A1 table
+    // printf("\nAdverts No.\tNo. of Spot Requested\tDuration per Spot\tAdverts Charges per Spot\tTotal Duration\tAmount\n");
+    // for(i=1;i<=28;i++)
+    // {
+    //     printf("%d\t\t%d\t\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
+    // }
+    knapsack(A1.numberOfAds, A1.totalTimeAvailable, A1.amount, A1.totalDuration);
 }
+
 //max function
 int max(int a, int b)
 {
@@ -36,94 +109,61 @@ int max(int a, int b)
     
 }
 
-
-void main()
+void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[])
 {
-    int numberOfAds, i, j, profitKnapsack=0, profit=0;
-    printf("\nEnter number of Ads to be displayed");
-    scanf("%d",&numberOfAds);
-    int AdLength[numberOfAds+1];
-    AdLength[0] = 0;
-    int AdProfit[numberOfAds+1];
-    AdProfit[0] = 0;
-    for(i=1;i<=numberOfAds;i++)
+    int i,j;
+    // declaring 2D matrix for 01 Knapsack computation
+    int Knapsack[numberOfAds+1][totalTimeAvailable+1];
+    for(i=0;i<=numberOfAds;i++)
     {
-        printf("\nEnter duration of AD %d : ",i);
-        scanf("%d",&AdLength[i]);
-        printf("\nEnter Profit of Ad %d : ",i);
-        scanf("%d",&AdProfit[i]);
-    }
-    // Declaring the Knapsack 2D Matrix
-    int Knapsack[numberOfAds+1][totalTimeSlot+1];
-
-    for (i=0; i<=numberOfAds;i++)
-    {
-        for(j=0;j<=totalTimeSlot;j++)
+        for(j=0;j<=totalTimeAvailable;j++)
         {
             if(i==0 || j==0)
             {
                 Knapsack[i][j]=0;
             }
-            else if(AdLength[i]<=j)
+            else if(Duration[i]<=j)
             {
-                Knapsack[i][j] = max(AdProfit[i] + Knapsack[i-1][j-AdLength[i]], Knapsack[i-1][j]);
+                Knapsack[i][j]=max(Amount[i] + Knapsack[i-1][j-Duration[i]], Knapsack[i-1][j]);
             }
             else
             {
                 Knapsack[i][j] = Knapsack[i-1][j];
-            }
-            
+            }            
         }
     }
-
-    // for (i=0; i<=numberOfAds;i++)
+    //printing Knapsack Computational Matrix
+    // for(i=0;i<=numberOfAds;i++)
     // {
-    //     for(j=0;j<=totalTimeSlot;j++)
+    //     for(j=0;j<=totalTimeAvailable;j++)
     //     {
-    //         printf("%d",Knapsack[i][j]);
-    //         printf("\n");            
+    //         printf("\t%d",Knapsack[i][j]);
     //     }
-    // }    
-    printf("%d\n",Knapsack[numberOfAds][totalTimeSlot]);
+    //     printf("\n");
+    // }
+    printf("\n%d",Knapsack[numberOfAds][totalTimeAvailable]);
     i = numberOfAds;
-    j = totalTimeSlot;
-    while(i>0 && j>=0)
+    j = totalTimeAvailable;
+    while (i>0 && j>=0)
     {
-        
-            if(Knapsack[i][j] == Knapsack[i-1][j])
+        if(Knapsack[i][j] == Knapsack[i-1][j])
         {
             printf("\nAd %d will not be displayed",i);
             i--;
-            //printf("/n Time Left: %d ",j);
         }
         else
         {
-            printf("\nAd %d will be displayed",i);
-            j = j - AdLength[i];
-            profitKnapsack += AdProfit[i];
+            printf("\nAd %d will be displayed", i);
+            j = j-Duration[i];
+            //TotalAmount += Amount[i]; 
             i--;
-            //printf("/n Time Left: %d ",j);  
-
         }
+        
     }
-    printf("\nProfit using Knapsack Technique is %d ",profitKnapsack);
+    
+}
 
-    // *********** Using normal Technique ***********
-    printf("\n\n***************************\n");
-    i =totalTimeSlot;
-        for(j=1;j<=numberOfAds;j++)
-        {
-            if(i>=AdLength[j])
-            {
-                printf("\nAd %d will be displayed ",j);
-                i -= AdLength[j];
-                profit += AdProfit[j];
-            }
-            else
-            {
-                printf("\nAd %d will not be displayed ",j);
-            }
-            
-        }
-        printf("\nProfit using FCFS Technique is %d \n",profit);
+void main()
+{
+    zoneA1();
 }

@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<time.h>	
-#include <unistd.h>
+#include<unistd.h>
+int iteration=0;
 void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[]);
 
 //Zone
@@ -98,7 +99,8 @@ void zoneA1()
     {
         printf("%d\t\t%d\t\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
     }
-    knapsack(A1.numberOfAds, A1.totalTimeAvailable, A1.amount, A1.totalDuration);
+    
+    
 }
 
 //max function
@@ -114,6 +116,42 @@ int max(int a, int b)
     }
     
 }
+//**************************************************
+//**************Perfect Subset Sum Algorithm********
+//**************************************************
+void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
+                             int subsetSum, int index ,int sum) 
+{
+    if(iteration == 0)
+    {
+    if (subsetSum == sum) 
+    {        
+        printf("\nS. No.\t Time");
+        for (int i = 1; i <= subsetSize; i++)
+        {
+            
+            printf("\n%d",i);
+            printf("\t%d ", subset[i]);
+        }
+        printf("\n");
+        iteration++;
+        printf("\nTotal time is %d", A1.totalTimeAvailable);
+    }
+    else 
+    {
+        for (int i = index; i < N; i++) 
+        { 
+            subset[subsetSize] = arr[i];
+            isSubsetSum(arr, subset, N, subsetSize + 1, 
+                        subsetSum + arr[i], i + 1, sum);
+        }
+    }
+    }    
+}
+
+//**************************************************
+//****************0-1 Knapsack Algorithm************
+//**************************************************
 
 void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[])
 {
@@ -173,6 +211,7 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     printf("\n\nAdv No.\tSpot Requested\tSpots Used\tDuration per Spot\tAdverts Charges per Spot\tTotal Duration\tAmount\n");
     for(i=1;i<=28;i++)
     {
+        if(NumberofSpotsUsed[i]!=0)
         printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
     }
     printf("\nTotal Amount is: %d",totalAmount);
@@ -180,6 +219,50 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
 }
 void main()
 {
-    zoneA1();   
+    printf("\nPlease select the ZONE");
+    printf("\n1. Zone A1 (20:00 - 21:00 )");
+    printf("\n2. Zone A2 (21:00 - 22:00 )");
+    int zone;
+    scanf("\n%d",&zone);
+    printf("\n*********************************************");
+    printf("\n*******Taking Zone as ZONE A%d***************",zone);
+    printf("\n*********************************************");
+
+    switch(zone)
+    {
+        case 1:
+            printf("\n\t***************************************************");
+            printf("\n\t**********Printing the Data of Zone A1*************");
+            printf("\n\t***************************************************");
+            
+            zoneA1();
+            break;
+        default:
+            break;
+    }  
+    printf("\nOptimise The selected Zone With Respect to :");
+    printf("\n\t1 Amount (Using Knapsack)");
+    printf("\n\t2 Time (Perfect Sum Problem)");
+    int choice;
+    scanf("\n\t%d",&choice);
+    int subset[A1.numberOfAds];
+    switch (choice)
+    {
+    case 1:
+        printf("\n*********************************************");
+        printf("\n******Optimising With Respect to Amount******");
+        printf("\n*********************************************");
+        knapsack(A1.numberOfAds, A1.totalTimeAvailable, A1.amount, A1.totalDuration);
+        break;
+    case 2:
+        printf("\n*********************************************");
+        printf("\n******Optimising With Respect to Time********");
+        printf("\n*********************************************\n");        
+        isSubsetSum(A1.totalDuration, subset, A1.numberOfAds, 0, 0, 0, A1.totalTimeAvailable);
+        break;
+    default:
+        printf("Please Enter correct Choice and run the code again!");
+        break;
+    }
     printf("\n");
 }

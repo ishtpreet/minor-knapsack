@@ -148,7 +148,7 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     //     }
     //     printf("\n");
     // }
-    printf("\n%d",Knapsack[numberOfAds][totalTimeAvailable]);
+    //printf("\n%d",Knapsack[numberOfAds][totalTimeAvailable]);
     i = numberOfAds;
     j = totalTimeAvailable;
     while (i>0 && j>=0)
@@ -170,16 +170,25 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
         }
         
     }
-    printf("\n\nAdv No.\tSpot Requested\tSpots Used\tDuration per Spot\tAdverts Charges per Spot\tTotal Duration\tAmount\n");
+    printf("\n\nAdv No.\tSpot Requested\tSpots Used\tDuration per Spot\tAdverts Charges per Spot\tTotal Duration\t\tAmount\n");
     for(i=1;i<=28;i++)
     {
-        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
+        if(NumberofSpotsUsed[i]!=0)
+        printf("%d\t%d\t\t%d\t\t%d\t\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
     }
     printf("\nTotal Amount is: %d",totalAmount);
     
 }
-void main()
+int main()
 {
+    int i;
     zoneA1();   
     printf("\n");
+    for(i=1;i<=28;i++)
+    {
+    printf("%d\n", A1.totalDuration[i]);
+    }
+    return 0;
+    
 }
+    

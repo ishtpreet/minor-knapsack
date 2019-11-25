@@ -3,6 +3,7 @@
 #include<unistd.h>
 int iteration=0;
 int zone;
+//int x[30];
 void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[]);
 
 //Zone
@@ -17,6 +18,7 @@ struct zone
     int advertChargesPerSpot[29];
     int totalDuration[29];
     int amount[29];
+    int selected[29];
 }A1,A4;
 
 //Zone A1
@@ -215,8 +217,11 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
         printf("\nS. No.\t Time");
         for (int i = 1; i <= subsetSize; i++)
         {
-            
+            //if(x[i]==1)
+            //{
             printf("\n%d",i);
+            //}
+
             printf("\t%d ", subset[i]);
         }
         printf("\n");
@@ -234,6 +239,7 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
     {
         for (int i = index; i < N; i++) 
         { 
+            //x[i] = 1;
             subset[subsetSize] = arr[i];
             isSubsetSum(arr, subset, N, subsetSize + 1, 
                         subsetSum + arr[i], i + 1, sum);
@@ -366,8 +372,6 @@ int main()
 
     int choice;
     scanf("\n\t%d",&choice);
-
-    
     switch (choice)
     {
     case 1:

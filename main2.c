@@ -19,7 +19,7 @@ struct zone
     int totalDuration[29];
     int amount[29];
     int selected[29];
-}A1,A4;
+}A1,A4,A9;
 
 //Zone A1
 void zoneA1()
@@ -190,6 +190,88 @@ void zoneA4()
     
 }
 
+//Zone A9
+void zoneA9()
+{
+    A9.numberOfAds = 18;
+    A9.totalTimeAvailable = 600;
+    int i;
+
+    /******************* Putting values in the corresponding arrays *****************/
+
+    //advertnumber/(S.No.)
+    for(i=1;i<=18;i++)
+    {
+        A9.advertNumber[i] = i;
+    }      
+
+    //numberOfSpotsRequested
+    //A1.numberOfSpotsRequested= {4,1,3,3,3,4,3,2,3,4,2,3,2,5,2,3,1,1,2,2,3,1,4,2,4,2,3,6};
+    FILE* ptr1 = fopen("A1numberOfSpotsRequested.txt","r");
+    for(i=1;i<=18;i++)
+    {
+        fscanf(ptr1,"%d",&A9.numberOfSpotsRequested[i]); 
+    }
+    fclose(ptr1);
+
+    //numberofspotsused
+    for(i=1;i<=18;i++)
+    {
+        A9.numberOfSpotsUsed[i]=A9.numberOfSpotsRequested[i];
+    }
+
+    //durationPerSpot
+    FILE* ptr2 = fopen("A9durationPerSpot.txt","r");
+    for(i=1;i<=18;i++)
+    {
+        fscanf(ptr2,"%d",&A9.durationPerSpot[i]); 
+    }
+    fclose(ptr2);
+    
+    //advertChargesPerSpot
+    for(i=1;i<=18;i++)
+    {
+        switch (A9.durationPerSpot[i])
+        {
+        case 15:
+            A9.advertChargesPerSpot[i] = 1450;
+            break;
+        case 20:
+            A9.advertChargesPerSpot[i] = 1812;
+            break;
+        case 30:
+            A9.advertChargesPerSpot[i] = 3002;
+            break;
+        case 45:
+            A9.advertChargesPerSpot[i] = 4531;
+            break;
+        }
+    }
+
+    //totalDuration
+    A9.totalDuration[0]=0;              //for implementing 01 Knapsack
+    for(i=1;i<=18;i++)
+    {
+        A9.totalDuration[i] = A9.durationPerSpot[i]*A9.numberOfSpotsRequested[i];
+    }
+
+    //amount                            
+    A9.amount[0]=0;                     //for implementing 01 Knapsack
+    for(i=1;i<=18;i++)
+    {
+        A9.amount[i] = A9.durationPerSpot[i]*A9.advertChargesPerSpot[i];
+    }
+
+    //Printing the zone A1 table
+    printf("\nAdverts No.\tNo. of Spot Requested\tDuration per Spot\tAdverts Charges per Spot\tTotal Duration\tAmount\n");
+    for(i=1;i<=18;i++)
+    {
+        printf("%d\t\t%d\t\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A9.advertNumber[i],A9.numberOfSpotsRequested[i],A9.durationPerSpot[i],A9.advertChargesPerSpot[i],A9.totalDuration[i],A1.amount[i]);
+    }
+    
+    
+}
+
 
 //max function
 int max(int a, int b)
@@ -233,6 +315,10 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
         else if(zone==4)
         {
         printf("\nTotal time is %d", A4.totalTimeAvailable);
+        }
+        else if(zone==9)
+        {
+        printf("\nTotal time is %d", A9.totalTimeAvailable);
         }
     }
     else 
@@ -308,6 +394,10 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
             {
                 NumberofSpotsUsed[i]=A4.numberOfSpotsRequested[i];
             }
+            else if(zone==9)
+            {
+                NumberofSpotsUsed[i]=A9.numberOfSpotsRequested[i];
+            }
             j = j-Duration[i];
             totalAmount += Amount[i]; 
             i--;
@@ -328,8 +418,17 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     for(i=1;i<=27;i++)
     {
         if(NumberofSpotsUsed[i]!=0)
-        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A4.advertNumber[i],A4.numberOfSpotsRequested[i],NumberofSpotsUsed[i],
-                                                                A4.durationPerSpot[i],A4.advertChargesPerSpot[i],A4.totalDuration[i],A4.amount[i]);
+        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A4.advertNumber[i],A4.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A4.durationPerSpot[i],A4.advertChargesPerSpot[i],A4.totalDuration[i],
+        A4.amount[i]);
+    }
+    }
+    else if(zone == 9)
+    {
+    for(i=1;i<=18;i++)
+    {
+        if(NumberofSpotsUsed[i]!=0)
+        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A9.advertNumber[i],A9.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A9.durationPerSpot[i],A9.advertChargesPerSpot[i],A9.totalDuration[i],
+        A9.amount[i]);
     }
     }
     printf("\nTotal Amount is: %d",totalAmount);
@@ -340,6 +439,7 @@ int main()
     printf("\nPlease select the ZONE");
     printf("\n1. Zone A1 (19:00 - 20:30 )");
     printf("\n4. Zone A4 (20:30 - 21:30 )");
+    printf("\n9. Zone A9 (12:00 - 12:30 )");
     scanf("\n%d",&zone);
     printf("\n*********************************************");
     printf("\n*******Taking Zone as ZONE A%d***************",zone);
@@ -360,6 +460,13 @@ int main()
             printf("\n\t**********Printing the Data of Zone A4*************");
             printf("\n\t***************************************************");
             zoneA4();
+            break;
+
+            case 9:
+            printf("\n\t***************************************************");
+            printf("\n\t**********Printing the Data of Zone A9*************");
+            printf("\n\t***************************************************");
+            zoneA9();
             break;
         default:
             break;
@@ -386,6 +493,10 @@ int main()
         {
             knapsack(A4.numberOfAds, A4.totalTimeAvailable, A4.amount, A4.totalDuration);
         }
+        else if(zone ==9)
+        {
+            knapsack(A9.numberOfAds, A9.totalTimeAvailable, A9.amount, A9.totalDuration);
+        }
         break;
     case 2:
         printf("\n*********************************************");
@@ -401,6 +512,11 @@ int main()
         {    
             int A4subset[A4.numberOfAds];
             isSubsetSum(A4.totalDuration, A4subset, A4.numberOfAds, 0, 0, 0, A4.totalTimeAvailable);
+        }
+        else if(zone==9)
+        {    
+            int A9subset[A9.numberOfAds];
+            isSubsetSum(A9.totalDuration, A9subset, A9.numberOfAds, 0, 0, 0, A9.totalTimeAvailable);
         }
         break;
     default:

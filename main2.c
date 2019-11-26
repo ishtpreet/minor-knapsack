@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<time.h>	
 #include<unistd.h>
 #include<time.h>
@@ -469,41 +470,51 @@ int main()
     printf("\n4. Zone A4 (20:30 - 21:30 )");
     printf("\n9. Zone A9 (12:00 - 12:30 )");
     scanf("\n%d",&zone);
-    printf("\n*********************************************");
-    printf("\n*******Taking Zone as ZONE A%d***************",zone);
-    printf("\n*********************************************");
+    // printf("\n*********************************************");
+    // printf("\n*******Taking Zone as ZONE A%d***************",zone);
+    // printf("\n*********************************************");
 
     switch(zone)
     {
         case 1:
-            printf("\n\t***************************************************");
-            printf("\n\t**********Printing the Data of Zone A1*************");
-            printf("\n\t***************************************************");
+            printf("\n\t******************************************************************************************************");
+            printf("\n\t**************************************Printing the Data of Zone A1************************************");
+            printf("\n\t*************************************************** **************************************************");
             
             zoneA1();
+            printf("\nOptimise selected Zone with respect to :");
+            printf("\n 1. Amount (Using Knapsack)");
+            printf("\n 2. Time (Perfect Sum Problem)");
             break;
 
             case 4:
-            printf("\n\t***************************************************");
-            printf("\n\t**********Printing the Data of Zone A4*************");
-            printf("\n\t***************************************************");
+           printf("\n\t******************************************************************************************************");
+            printf("\n\t**************************************Printing the Data of Zone A4************************************");
+            printf("\n\t*************************************************** **************************************************");
             zoneA4();
+            printf("\nOptimise selected Zone with respect to :");
+            printf("\n 1. Amount (Using Knapsack)");
+            printf("\n 2. Time (Perfect Sum Problem)");
             break;
 
             case 9:
-            printf("\n\t***************************************************");
-            printf("\n\t**********Printing the Data of Zone A9*************");
-            printf("\n\t***************************************************");
+            printf("\n\t******************************************************************************************************");
+            printf("\n\t**************************************Printing the Data of Zone A9************************************");
+            printf("\n\t*************************************************** **************************************************");
             zoneA9();
+            printf("\nOptimise selected Zone with respect to :");
+            printf("\n 1. Amount (Using Knapsack)");
+            printf("\n 2. Time (Perfect Sum Problem)");
+            
             break;
         default:
             printf("Please Enter correct Choice and run the code again!");
-            break;
+           
+            exit(0);
+
     }  
 
-    printf("\nOptimise The selected Zone With Respect to :");
-    printf("\n\t1 Amount (Using Knapsack)");
-    printf("\n\t2 Time (Perfect Sum Problem)");
+   
 
 
     int choice;
@@ -511,9 +522,9 @@ int main()
     switch (choice)
     {
     case 1:
-        printf("\n*********************************************");
-        printf("\n******Optimising With Respect to Amount******");
-        printf("\n*********************************************");
+        printf("\n\t******************************************************************************************************");
+            printf("\n\t******************************* Optimising with respect to profit **************************************");
+            printf("\n\t*****************************************************************************************************");
         if(zone==1)
         {
             knapsack(A1.numberOfAds, A1.totalTimeAvailable, A1.amount, A1.totalDuration);
@@ -528,9 +539,9 @@ int main()
         }
         break;
     case 2:
-        printf("\n*********************************************");
-        printf("\n******Optimising With Respect to Time********");
-        printf("\n*********************************************\n");    
+        printf("\n\t******************************************************************************************************");
+            printf("\n\t************************************** Optimising with respect to time ************************************");
+            printf("\n\t*************************************************** **************************************************");    
         if(zone==1)
         {
             int A1subset[A1.numberOfAds];

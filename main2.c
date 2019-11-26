@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<time.h>	
 #include<unistd.h>
+#include<time.h>
 int iteration=0;
 int zone;
 int x[30];
@@ -285,6 +286,21 @@ int max(int a, int b)
     }
     
 }
+
+void delay(int number_of_seconds) 
+{ 
+    // Converting time into milli_seconds 
+    int milli_seconds = 10000 * number_of_seconds; 
+  
+    // Stroing start time 
+    clock_t start_time = clock(); 
+  
+    // looping till required time is not acheived 
+    while (clock() < start_time + milli_seconds) 
+        ; 
+} 
+
+
 //**************************************************
 //**************Perfect Subset Sum Algorithm********
 //**************************************************
@@ -299,11 +315,9 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
         printf("\nS. No.\t Time");
         for (int i = 1; i < subsetSize; i++)
         {
-            //if(x[i]==1)
-            //{
             printf("\n%d",x[i]);
             printf("\t%d ", subset[i]);
-            //}
+            delay(subset[i]);
         }
         printf("\n");
         iteration++;
@@ -328,15 +342,15 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
             subset[subsetSize] = arr[i];
             if(zone==1)
             {
-            x[subsetSize] = A1.advertNumber[i];
+                x[subsetSize] = A1.advertNumber[i];
             }
             else if(zone==4)
             {
-            x[subsetSize] = A4.advertNumber[i];
+                x[subsetSize] = A4.advertNumber[i];
             }
             else if(zone==9)
             {
-            x[subsetSize] = A9.advertNumber[i];
+                x[subsetSize] = A9.advertNumber[i];
             }
             isSubsetSum(arr, subset, N, subsetSize + 1, 
                         subsetSum + arr[i], i + 1, sum);
@@ -389,7 +403,7 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     {
         if(Knapsack[i][j] == Knapsack[i-1][j])
         {
-            printf("\nAd %d will not be displayed",i);
+            //printf("\nAd %d will not be displayed",i);
             NumberofSpotsUsed[i]=0;
             i--;
 
@@ -399,14 +413,17 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
             printf("\nAd %d will be displayed", i);
             if(zone==1)
             {
+                delay(A1.totalDuration[i]);
                 NumberofSpotsUsed[i]=A1.numberOfSpotsRequested[i];
             }
             else if(zone==4)
             {
+                delay(A4.totalDuration[i]);
                 NumberofSpotsUsed[i]=A4.numberOfSpotsRequested[i];
             }
             else if(zone==9)
             {
+                delay(A9.totalDuration[i]);
                 NumberofSpotsUsed[i]=A9.numberOfSpotsRequested[i];
             }
             j = j-Duration[i];

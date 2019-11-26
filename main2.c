@@ -3,10 +3,10 @@
 #include<unistd.h>
 int iteration=0;
 int zone;
-//int x[30];
+int x[30];
 void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duration[]);
 
-//Zone
+//Zone Structure
 struct zone
 {
     int numberOfAds;
@@ -18,7 +18,6 @@ struct zone
     int advertChargesPerSpot[29];
     int totalDuration[29];
     int amount[29];
-    int selected[29];
 }A1,A4,A9;
 
 //Zone A1
@@ -292,19 +291,19 @@ int max(int a, int b)
 void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
                              int subsetSum, int index ,int sum) 
 {
+  
     if(iteration == 0)
     {
     if (subsetSum == sum) 
     {        
         printf("\nS. No.\t Time");
-        for (int i = 1; i <= subsetSize; i++)
+        for (int i = 1; i < subsetSize; i++)
         {
             //if(x[i]==1)
             //{
-            printf("\n%d",i);
-            //}
-
+            printf("\n%d",x[i]);
             printf("\t%d ", subset[i]);
+            //}
         }
         printf("\n");
         iteration++;
@@ -325,8 +324,20 @@ void isSubsetSum(int arr[], int subset[], int N, int subsetSize,
     {
         for (int i = index; i < N; i++) 
         { 
-            //x[i] = 1;
+            
             subset[subsetSize] = arr[i];
+            if(zone==1)
+            {
+            x[subsetSize] = A1.advertNumber[i];
+            }
+            else if(zone==4)
+            {
+            x[subsetSize] = A4.advertNumber[i];
+            }
+            else if(zone==9)
+            {
+            x[subsetSize] = A9.advertNumber[i];
+            }
             isSubsetSum(arr, subset, N, subsetSize + 1, 
                         subsetSum + arr[i], i + 1, sum);
         }
@@ -371,7 +382,7 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     //     }
     //     printf("\n");
     // }
-    printf("\n%d",Knapsack[numberOfAds][totalTimeAvailable]);
+    //printf("\n%d",Knapsack[numberOfAds][totalTimeAvailable]);
     i = numberOfAds;
     j = totalTimeAvailable;
     while (i>0 && j>=0)
@@ -409,8 +420,8 @@ void knapsack(int numberOfAds, int totalTimeAvailable, int Amount[], int Duratio
     for(i=1;i<=28;i++)
     {
         if(NumberofSpotsUsed[i]!=0)
-        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],NumberofSpotsUsed[i],
-                                                                A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],A1.amount[i]);
+        printf("%d\t%d\t\t%d\t\t%d\t\t\t%d\t\t\t\t%d\t\t%d\n",A1.advertNumber[i],A1.numberOfSpotsRequested[i],NumberofSpotsUsed[i],A1.durationPerSpot[i],A1.advertChargesPerSpot[i],A1.totalDuration[i],
+        A1.amount[i]);
     }
     }
     else if(zone == 4)
@@ -469,6 +480,7 @@ int main()
             zoneA9();
             break;
         default:
+            printf("Please Enter correct Choice and run the code again!");
             break;
     }  
 
@@ -524,6 +536,5 @@ int main()
         break;
     }
     printf("\n");
-
-    return 1;
+    
 }

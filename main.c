@@ -597,6 +597,17 @@ int main()
         printf("Please Enter correct Choice and run the code again!");
         break;
     }
-    printf("\nTotal Time Used is : 1200 seconds");
+    if(zone == 1)
+    {
+        printf("\nTotal Time Used is : %d seconds", A1.totalTimeAvailable);
+    }
+    else if(zone ==4)
+    {
+        printf("\nTotal Time Used is : %d seconds", A4.totalTimeAvailable);
+    }
+    else if(zone == 9)
+    {
+        printf("\nTotal Time Used is : %d seconds",A9.totalTimeAvailable);
+    }
     printf("\n");
 }
